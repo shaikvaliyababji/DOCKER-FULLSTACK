@@ -1,5 +1,6 @@
-const config = {
-    url: "http://localhost:2001"
+const config = 
+{
+   url: process.env.REACT_APP_API_URL
 }
 
 export default config;

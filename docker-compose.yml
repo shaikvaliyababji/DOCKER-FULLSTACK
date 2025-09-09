@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: studentdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./STUDENTAPI-SPRINGBOOT
+      dockerfile: ../STUDENTAPI-FULLSTACK/STUDENTAPI-SPRINGBOOT.Dockerfile
+    container_name: springboot-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/studentdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "2025:2000"
+
+  frontend:
+    build:
+      context: ./STUDENTAPI-REACT
+      dockerfile: ../STUDENTAPI-FULLSTACK/STUDENTAPI-REACT.Dockerfile
+    container_name: react-app
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+    environment:
+      REACT_APP_API_URL: http://backend:2000
+
+# Root volumes block must be a mapping
+volumes:
+  mysql_data:
