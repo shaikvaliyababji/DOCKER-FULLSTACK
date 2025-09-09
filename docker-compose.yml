@@ -8,14 +8,19 @@ services:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3307:3307"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
       context: ./STUDENTAPI-SPRINGBOOT
-      dockerfile: ../STUDENTAPI-FULLSTACK/STUDENTAPI-SPRINGBOOT.Dockerfile
+      dockerfile: ../STUDENTAPI-FULLSTACK/backend.Dockerfile
     container_name: springboot-app
     depends_on:
       mysql:
@@ -30,7 +35,7 @@ services:
   frontend:
     build:
       context: ./STUDENTAPI-REACT
-      dockerfile: ../STUDENTAPI-FULLSTACK/STUDENTAPI-REACT.Dockerfile
+      dockerfile: ../STUDENTAPI-FULLSTACK/frontend.Dockerfile
     container_name: react-app
     depends_on:
       - backend
@@ -39,6 +44,5 @@ services:
     environment:
       REACT_APP_API_URL: http://backend:2000
 
-# Root volumes block must be a mapping
 volumes:
   mysql_data:
