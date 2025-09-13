@@ -3,14 +3,14 @@ services:
     image: mysql:8
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: Babji1234
       MYSQL_DATABASE: studentdb
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+    # MYSQL_USER: root
+    # MYSQL_PASSWORD: root
     ports:
-      - "3307:3307"
-    volumes:
-      - mysql_data:/var/lib/mysql
+      - "3307:3306"
+  # volumes:
+  #   - mysql_data:/var/lib/mysql
 
   backend:
     build:
